@@ -17,6 +17,13 @@ func peerConnected(id):
 	
 func peerDisonnected(id):
 	print('Player has disonnected: ' + str(id))
+	if id == 1:
+		# Host has left
+		GameManager.players.clear()
+		$LineEdit.editable = true
+	else:
+		GameManager.players.erase(id);
+	getPlayerNames.rpc()
 	
 # called only client	
 func connectedServer():
@@ -39,6 +46,8 @@ func _on_host_button_button_down() -> void:
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)
 	sendPlayerInfo($LineEdit.text,1)
+	$LineEdit.editable = false
+	$PanelContainer/HBoxContainer/StartButton.disabled = false
 	print('Waiting for players')
 	
 @rpc('any_peer')
@@ -74,6 +83,7 @@ func _on_join_button_button_down() -> void:
 	peer.create_client(address, port)
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)	
+	$LineEdit.editable = false
 
 
 func _on_start_button_button_down() -> void:
