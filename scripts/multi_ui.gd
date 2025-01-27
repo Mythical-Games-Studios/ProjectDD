@@ -24,6 +24,7 @@ func peerDisonnected(id):
 	else:
 		GameManager.players.erase(id);
 	getPlayerNames.rpc()
+	changePlayerCount()
 	
 # called only client	
 func connectedServer():
@@ -48,6 +49,7 @@ func _on_host_button_button_down() -> void:
 	sendPlayerInfo($LineEdit.text,1)
 	$LineEdit.editable = false
 	$PanelContainer/HBoxContainer/StartButton.disabled = false
+	changePlayerCount()
 	print('Waiting for players')
 	
 @rpc('any_peer')
@@ -61,6 +63,7 @@ func sendPlayerInfo(name, id):
 		 }
 	# If the server, broadcast the player info
 	#if multiplayer.is_server():
+	changePlayerCount()
 	for player_id in GameManager.players:
 		sendPlayerInfo.rpc(GameManager.players[player_id].name, player_id)
 		getPlayerNames.rpc()
@@ -100,3 +103,8 @@ func startGame():
 	self.hide()
 	sendPlayerInfo($LineEdit.text,multiplayer.get_unique_id())
 	print('START')
+	
+	
+func changePlayerCount():
+	var c = len(GameManager.players)
+	$PlayerCount.text = 'Player Count (' + str(c) + '/4)'
