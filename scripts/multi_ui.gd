@@ -108,3 +108,8 @@ func startGame():
 func changePlayerCount():
 	var c = len(GameManager.players)
 	$PlayerCount.text = 'Player Count (' + str(c) + '/4)'
+	
+	
+@rpc("call_local",'any_peer')
+func sendUpdate(message):
+	pass #TODO

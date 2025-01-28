@@ -1,12 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwmi1pmm8ywe4"]
+[gd_scene load_steps=7 format=3 uid="uid://bwmi1pmm8ywe4"]
 
+[ext_resource type="Script" path="res://scripts/sceneManager.gd" id="1_iaypj"]
 [ext_resource type="PackedScene" uid="uid://cpd6y2vqm1hs" path="res://game/character.tscn" id="1_jkfw2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_dsg6p"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dhkoq"]
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_bcp10"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ouj15"]
+
 [node name="Main" type="Node3D"]
+script = ExtResource("1_iaypj")
+PlayerScene = ExtResource("1_jkfw2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 0.1, 0, 0, 0, 10, 0, 0, 0)
@@ -17,5 +24,21 @@ mesh = SubResource("BoxMesh_dsg6p")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
 shape = SubResource("BoxShape3D_dhkoq")
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("1_jkfw2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+[node name="SpawnLocations" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 2.51034, 2.54791, 0)
+
+[node name="0" type="Node3D" parent="SpawnLocations" groups=["SpawnLocations"]]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4.91589, 0, -4.2976e-07)
+
+[node name="1" type="Node3D" parent="SpawnLocations" groups=["SpawnLocations"]]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.435938, 0.899977, 0, -0.899977, 0.435938, 0, 5.05353, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0392, 0, 1.82223)
+mesh = SubResource("CylinderMesh_bcp10")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.1936, 1.02245, 1.82223)
+mesh = SubResource("SphereMesh_ouj15")
