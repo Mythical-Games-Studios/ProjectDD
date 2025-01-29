@@ -3,13 +3,21 @@ extends CharacterBody3D
 
 const MAX_ANGLE = 90
 const MOUSE_SEN = 0.3
+var rot_y = 0
+var rot_x = 0
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		var rotation = $face.rotation_degrees
-		print(rotation.y, ' ', -event.relative.x)
-		if (rotation.y < 90 and -event.relative.x > 0) or (rotation.y > -90 and -event.relative.x < 0):
-			$face.rotate_y(deg_to_rad(-event.relative.x * MOUSE_SEN))
+		var CAMERA = $face#/Camera3D
+		var rotation = CAMERA.rotation_degrees
+		var reqroty = -event.relative.x * MOUSE_SEN
+		var reqrotx = -event.relative.y * MOUSE_SEN
+		if (rot_y < 70 and reqroty > 0) or (rot_y > -70 and reqroty < 0):
+			rot_y += reqroty 
+			CAMERA.rotate_y(deg_to_rad(reqroty))
+		if (rot_x < 70 and reqrotx > 0) or (rot_x > -70 and reqrotx < 0):
+			rot_x += reqrotx 
+			CAMERA.rotation.x += (deg_to_rad(reqrotx))
 	
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

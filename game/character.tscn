@@ -37,4 +37,4 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.3, 0.507774, 0.56517, 0)
 mesh = SubResource("BoxMesh_bddwn")
 
 [node name="Camera3D" type="Camera3D" parent="face"]
-transform = Transform3D(-4.37114e-07, 0, -10, 0, 10, 0, 3.33333, 0, -1.45705e-07, 1, 0, 0)
+transform = Transform3D(-1.45705e-07, 0, -10, 0, 10, 0, 3.33333, 0, -4.37114e-07, 1, 0, 0)
