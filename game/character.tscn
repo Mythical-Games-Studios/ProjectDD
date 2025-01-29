@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cpd6y2vqm1hs"]
+[gd_scene load_steps=7 format=3 uid="uid://cpd6y2vqm1hs"]
 
 [ext_resource type="Script" path="res://character.gd" id="1_hxccs"]
 [ext_resource type="Script" path="res://scripts/playername3d.gd" id="2_fgs4c"]
@@ -7,11 +7,17 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lhelk"]
 
-[node name="CharacterBody3D" type="CharacterBody3D"]
-script = ExtResource("1_hxccs")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wyw4y"]
+albedo_color = Color(1, 1, 0, 1)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.592078, 0)
+[sub_resource type="BoxMesh" id="BoxMesh_bddwn"]
+material = SubResource("StandardMaterial3D_wyw4y")
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+script = ExtResource("1_hxccs")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_b22mm")
@@ -25,3 +31,10 @@ billboard = 1
 double_sided = false
 text = "PLAYER N/A"
 script = ExtResource("2_fgs4c")
+
+[node name="face" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.3, 0.507774, 0.56517, 0)
+mesh = SubResource("BoxMesh_bddwn")
+
+[node name="Camera3D" type="Camera3D" parent="face"]
+transform = Transform3D(-4.37114e-07, 0, -10, 0, 10, 0, 3.33333, 0, -1.45705e-07, 1, 0, 0)

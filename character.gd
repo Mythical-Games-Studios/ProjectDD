@@ -1,12 +1,18 @@
 extends CharacterBody3D
 
 
+const MAX_ANGLE = 90
+const MOUSE_SEN = 0.3
 
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-var syncPos = Vector2(0,0)
-var syncRot = 0
-const SPEED = 300.0
-const JUMP_VELOCITY = 400.0
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		var rotation = $face.rotation_degrees
+		print(rotation.y, ' ', -event.relative.x)
+		if (rotation.y < 90 and -event.relative.x > 0) or (rotation.y > -90 and -event.relative.x < 0):
+			$face.rotate_y(deg_to_rad(-event.relative.x * MOUSE_SEN))
+	
+func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 #func _physics_process(delta):
 	#pass

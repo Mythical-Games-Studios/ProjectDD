@@ -13,5 +13,6 @@ func _ready() -> void:
 		currentPly.global_position = spawn.global_position
 		currentPly.global_rotation = spawn.global_rotation
 		if mID == player:
-			currentPly.get_child(0).current = true
+			var cam = currentPly.get_node('face/Camera3D')
+			cam.current = true
 		index+=1	
