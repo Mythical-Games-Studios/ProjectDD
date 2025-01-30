@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cpd6y2vqm1hs"]
+[gd_scene load_steps=8 format=3 uid="uid://cpd6y2vqm1hs"]
 
 [ext_resource type="Script" path="res://character.gd" id="1_hxccs"]
 [ext_resource type="Script" path="res://scripts/playername3d.gd" id="2_fgs4c"]
@@ -12,6 +12,11 @@ albedo_color = Color(1, 1, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_bddwn"]
 material = SubResource("StandardMaterial3D_wyw4y")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ttxsh"]
+properties/0/path = NodePath("face:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 axis_lock_linear_x = true
@@ -38,3 +43,7 @@ mesh = SubResource("BoxMesh_bddwn")
 
 [node name="Camera3D" type="Camera3D" parent="face"]
 transform = Transform3D(-1.45705e-07, 0, -10, 0, 10, 0, 3.33333, 0, -4.37114e-07, 1, 0, 0)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_ttxsh")

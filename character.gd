@@ -7,20 +7,24 @@ var rot_y = 0
 var rot_x = 0
 
 func _input(event: InputEvent) -> void:
+	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		return
+	
 	if event is InputEventMouseMotion:
 		var CAMERA = $face#/Camera3D
-		var rotation = CAMERA.rotation_degrees
+		var rotation_deg = CAMERA.rotation_degrees
 		var reqroty = -event.relative.x * MOUSE_SEN
 		var reqrotx = -event.relative.y * MOUSE_SEN
 		if (rot_y < 70 and reqroty > 0) or (rot_y > -70 and reqroty < 0):
 			rot_y += reqroty 
 			CAMERA.rotate_y(deg_to_rad(reqroty))
-		if (rot_x < 70 and reqrotx > 0) or (rot_x > -70 and reqrotx < 0):
-			rot_x += reqrotx 
-			CAMERA.rotation.x += (deg_to_rad(reqrotx))
+		#if (rot_x < 70 and reqrotx > 0) or (rot_x > -70 and reqrotx < 0):
+			#rot_x += reqrotx 
+			#CAMERA.rotation.x += (deg_to_rad(reqrotx))
 	
 func _ready() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	$MultiplayerSynchronizer.set_multiplayer_authority(name.to_int())
 
 #func _physics_process(delta):
 	#pass

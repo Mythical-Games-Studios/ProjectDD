@@ -8,6 +8,7 @@ func _ready() -> void:
 	var mID = multiplayer.get_unique_id()
 	for player in GameManager.players:
 		var currentPly = PlayerScene.instantiate()
+		currentPly.name = str(GameManager.players[player].id)
 		add_child(currentPly)
 		var spawn = get_tree().get_nodes_in_group("SpawnLocations")[index]
 		currentPly.global_position = spawn.global_position
