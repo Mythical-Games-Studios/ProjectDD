@@ -2,6 +2,8 @@ extends Node
 
 var players = {}
 
+signal update_hand(type,card)
+
 # 28 Pieces
 const DOMINOS = [
 	[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],
@@ -16,23 +18,29 @@ func _ready() -> void:
 	pass
 	
 	
-@rpc("any_peer",'call_local')
+@rpc("authority",'call_local')
 func reset():
 	deck = DOMINOS.duplicate(true)
+	update_hand.emit('clear')
 	
 	
 @rpc("authority",'call_local')
 func give_domino(id):
-	pass
+	#print(multiplayer.get_unique_id())
+	#print(id)
+	#pass
+	update_hand.emit('add',id)
 	
 
 
-@rpc('authority','call_local')
+@rpc('authority','call_remote')
 func setup():
+	if not multiplayer.is_server():
+		return
 	reset()
 	for player in players:
 		for c in range(0,7):
-			var i = randi_range(0,len(deck))
+			var i = randi_range(0,len(deck) - 1)
 			var piece = deck[i]
 			deck.remove_at(i)
-		
+			give_domino.rpc_id(players[player].id,piece)

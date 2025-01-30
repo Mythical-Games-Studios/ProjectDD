@@ -54,8 +54,7 @@ func _on_host_button_button_down() -> void:
 	
 @rpc('any_peer')
 func sendPlayerInfo(name, id):
-	var start_time = Time.get_ticks_usec()
-	# Your logic here
+	#var start_time = Time.get_ticks_usec()
 	# Check if player does not already exist
 	if not GameManager.players.has(id):
 		GameManager.players[id] = {
@@ -69,8 +68,8 @@ func sendPlayerInfo(name, id):
 		for player_id in GameManager.players:
 			sendPlayerInfo.rpc(GameManager.players[player_id].name, player_id)
 			getPlayerNames.rpc()
-	var end_time = Time.get_ticks_usec()
-	print("Process time: ", end_time - start_time, " µs")
+	#var end_time = Time.get_ticks_usec()
+	#print("Process time: ", end_time - start_time, " µs")
 
 @rpc("any_peer","call_local")
 func getPlayerNames():
@@ -108,6 +107,7 @@ func startGame():
 	self.hide()
 	sendPlayerInfo($LineEdit.text,multiplayer.get_unique_id())
 	print('START')
+	GameManager.setup()
 	
 	
 func changePlayerCount():

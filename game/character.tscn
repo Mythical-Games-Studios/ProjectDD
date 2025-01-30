@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cpd6y2vqm1hs"]
+[gd_scene load_steps=9 format=3 uid="uid://cpd6y2vqm1hs"]
 
 [ext_resource type="Script" path="res://character.gd" id="1_hxccs"]
 [ext_resource type="Script" path="res://scripts/playername3d.gd" id="2_fgs4c"]
+[ext_resource type="Script" path="res://scripts/cardshandler.gd" id="3_a2cp4"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_b22mm"]
 
@@ -47,3 +48,6 @@ transform = Transform3D(-1.45705e-07, 0, -10, 0, 10, 0, 3.33333, 0, -4.37114e-07
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_ttxsh")
+
+[node name="Cards" type="Node3D" parent="."]
+script = ExtResource("3_a2cp4")

@@ -26,7 +26,11 @@ func _ready() -> void:
 	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	$MultiplayerSynchronizer.set_multiplayer_authority(name.to_int())
 
+
+
+
 #func _physics_process(delta):
+	#print(GameManager.playerdeck)
 	#pass
 		# Add the gravity.
 		#if not is_on_floor():
