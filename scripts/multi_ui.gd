@@ -107,7 +107,7 @@ func startGame():
 	self.hide()
 	sendPlayerInfo($LineEdit.text,multiplayer.get_unique_id())
 	print('START')
-	GameManager.setup()
+	GameManager.game_cycle()
 	
 	
 func changePlayerCount():

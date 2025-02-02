@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cpd6y2vqm1hs"]
+[gd_scene load_steps=10 format=3 uid="uid://cpd6y2vqm1hs"]
 
 [ext_resource type="Script" path="res://character.gd" id="1_hxccs"]
 [ext_resource type="Script" path="res://scripts/playername3d.gd" id="2_fgs4c"]
 [ext_resource type="Script" path="res://scripts/cardshandler.gd" id="3_a2cp4"]
+[ext_resource type="PackedScene" uid="uid://08rr8wrcgf8h" path="res://ui/game_test_ui.tscn" id="4_h162u"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_b22mm"]
 
@@ -18,6 +19,9 @@ material = SubResource("StandardMaterial3D_wyw4y")
 properties/0/path = NodePath("face:rotation")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("GameUI:clip_children")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 axis_lock_linear_x = true
@@ -51,3 +55,5 @@ replication_config = SubResource("SceneReplicationConfig_ttxsh")
 
 [node name="Cards" type="Node3D" parent="."]
 script = ExtResource("3_a2cp4")
+
+[node name="GameUI" parent="." instance=ExtResource("4_h162u")]
