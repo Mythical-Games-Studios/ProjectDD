@@ -100,7 +100,7 @@ func _on_start_button_button_down() -> void:
 	startGame.rpc()
 	pass # Replace with function body.
 	
-@rpc("call_local","any_peer")
+@rpc("call_local","authority")
 func startGame():
 	var scene = load("res://game/main.tscn").instantiate()
 	get_tree().root.add_child(scene)

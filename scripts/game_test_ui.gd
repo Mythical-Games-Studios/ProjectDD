@@ -24,9 +24,10 @@ func removebutton(value):
 func pressed(button,value):
 	var c = value.duplicate(true)
 	c.append(multiplayer.get_unique_id())
-	print(value)
+	#print(value)
 	#GameManager.turn_finished.emit(c)
 	GameManager.player_played.rpc(multiplayer.get_unique_id(),value)
+	GameManager.playerfinished.rpc(len(container.get_children()) - 1 == 0)
 	disableall()
 
 # Called when the node enters the scene tree for the first time.
@@ -36,8 +37,8 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+#func _process(delta: float) -> void:
+	#pass
 
 func enablebutton(value):
 	var n = str(value[0]) + '-' + str(value[1]) 
@@ -47,3 +48,8 @@ func disableall():
 	var c = container.get_children()
 	for i in c:
 		i.disabled = true
+		
+func reset():
+	#container
+	pass
+	#TODO 

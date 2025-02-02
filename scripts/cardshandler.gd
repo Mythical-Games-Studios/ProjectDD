@@ -3,7 +3,7 @@ extends Node3D
 
 var deck = []
 var GUI = null
-
+var IGNORE = false
 
 func getavaliableplays():
 	var avp = []
@@ -20,12 +20,18 @@ func _ready() -> void:
 	GUI = $"../GameUI"
 	if (get_parent().name != str(multiplayer.get_unique_id())):
 		GUI.visible = false
+		IGNORE = true
 
-func hand_handler(type,piece = null):
+func hand_handler(type,piece = null,id = 0):
+	#print(id, multiplayer.get_unique_id())
+	if (id != 0 and id != multiplayer.get_unique_id()) || IGNORE:
+		return
 	# add (adds a piece)
 	# clear (clears hand)
 	# play (start player turn)
 	# remove (remove piece)
+	# reset
+	# value
 	if type == 'add':
 		deck.append(piece)
 		GUI.createbutton.rpc_id(multiplayer.get_unique_id(),piece)
@@ -41,10 +47,15 @@ func hand_handler(type,piece = null):
 		var avp = getavaliableplays()
 		print(avp)
 		if not len(avp):
+			print('NO PIECE')
 			#GameManager.turn_finished.emit([multiplayer.get_unique_id()])
 			GameManager.player_played.rpc(multiplayer.get_unique_id())
 			#GameManager.turn_finished.emit(multiplayer.get_unique_id(),avp[0])
 		#else:
 		#await get_tree().create_timer(3).timeout
 		#GameManager.turn_finished.emit()
-		
+	elif type == 'value':
+		var total = 0
+		for apiece in deck:	
+			total += apiece[0] + apiece[1]
+		print(total)

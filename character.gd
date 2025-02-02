@@ -28,7 +28,6 @@ func _ready() -> void:
 
 
 
-
 #func _physics_process(delta):
 	#print(GameManager.playerdeck)
 	#pass

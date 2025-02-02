@@ -2,10 +2,9 @@ extends Node
 
 var players = {}
 var ground = [-1,-1]
-var PT = null
 var PP = null
 
-signal update_hand(type,card)
+signal update_hand(type,card,id)
 
 # 28 Pieces
 const DOMINOS = [
@@ -26,7 +25,6 @@ func reset():
 	deck = DOMINOS.duplicate(true)
 	update_hand.emit('clear')
 	ground = [-1,-1]
-	PT = null
 	PP = null
 	
 	
@@ -38,8 +36,11 @@ func give_domino(piece):
 	update_hand.emit('add',piece)
 	
 @rpc("authority",'call_local')
-func player_turn():
-	update_hand.emit('play')
+func player_turn(player):
+	#var sender_id = multiplayer.get_remote_sender_id()
+	#print(sender_id)
+	#print(player)
+	update_hand.emit('play',null,player)
 	
 @rpc("any_peer",'call_local')
 func played(piece):
@@ -60,17 +61,27 @@ func setup():
 
 
 signal turn_finished
+signal finished
+signal total
 
 @rpc("any_peer",'call_local')
 func player_played(player,piece = null):
-	if PT != player:
-		return
-	PP = piece
+	#return [player,piece]
+	turn_finished.emit(player,piece)
 	
 @rpc("any_peer","call_local")
 func updateground(data):
 	ground = data		
-	print('UPDATED GROUND ',ground)
+	if multiplayer.is_server():
+		print('UPDATED GROUND ',ground)
+		
+@rpc("any_peer",'call_local')
+func playerfinished(type):
+	finished.emit(type)
+	
+@rpc("any_peer",'call_local')
+func gettotal(type):
+	update_hand.emit('value')
 	
 @rpc("authority",'call_remote')
 func game_cycle():
@@ -85,18 +96,16 @@ func game_cycle():
 		#  round turn loop
 		while true:
 			var player = players.values()[turn].id
-			PT = player
-			player_turn.rpc_id(player)
+			player_turn.rpc_id(player,player)
 			# Wait for either 20 seconds or the player finishing their turn
 			# TODO HANDLE IT SERVER SIDE
 			#var data = await turn_finished
+			var data = await turn_finished
+			var id = data[0]
+			var piece = null
 			
-			var oPP = PP
-			while oPP == PP:
-				await get_tree().create_timer(1).timeout
-			
-			var id = PT
-			var piece = PP
+			if len(data) > 1:
+				piece = data[1]
 			
 			# Check if it is the correct player
 			if player != id:
@@ -120,6 +129,17 @@ func game_cycle():
 			else:
 				print('Player played')
 				print(piece)
+				
+				var finished = await finished
+				if (finished):
+					print('ROUND OVER')
+					print('PLAYER ' + str(player) + ' HAS WON')
+					for others in players:
+						if others == player:
+							continue
+						gettotal.rpc_id(others)
+					await get_tree().create_timer(60).timeout
+					break
 				
 				# Handler for placement
 				# -1 -> nothing replace completely
@@ -148,3 +168,4 @@ func game_cycle():
 			# check if player finished function
 			turn += 1;
 			turn %= len(players)
+		
