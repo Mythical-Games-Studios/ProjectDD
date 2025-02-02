@@ -80,7 +80,7 @@ func playerfinished(type):
 	finished.emit(type)
 	
 @rpc("any_peer",'call_local')
-func gettotal(type):
+func gettotal():
 	update_hand.emit('value')
 	
 @rpc("authority",'call_remote')
