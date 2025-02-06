@@ -58,4 +58,5 @@ func hand_handler(type,piece = null,id = 0):
 		var total = 0
 		for apiece in deck:	
 			total += apiece[0] + apiece[1]
-		print(total)
+		await get_tree().create_timer(0.3).timeout	
+		GameManager.total.emit(total)

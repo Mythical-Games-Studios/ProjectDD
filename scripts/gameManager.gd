@@ -2,8 +2,8 @@ extends Node
 
 var players = {}
 var ground = [-1,-1]
-var PP = null
-
+var PS = 0
+var Target = 7
 signal update_hand(type,card,id)
 
 # 28 Pieces
@@ -18,14 +18,18 @@ var deck = DOMINOS.duplicate(true)
 
 func _ready() -> void:
 	pass
-	
+
+@rpc("any_peer",'call_local')
+func resetscore():
+	for i in players:
+		players[i].score = 0	
 	
 @rpc("authority",'call_local')
 func reset():
 	deck = DOMINOS.duplicate(true)
 	update_hand.emit('clear')
 	ground = [-1,-1]
-	PP = null
+	PS = 0
 	
 	
 @rpc("authority",'call_local')
@@ -53,7 +57,8 @@ func setup():
 		return
 	reset()
 	for player in players:
-		for c in range(0,7):
+		resetscore.rpc_id(player)
+		for c in range(0,1): #range(0,7): DEBUG
 			var i = randi_range(0,len(deck) - 1)
 			var piece = deck[i]
 			deck.remove_at(i)
@@ -63,6 +68,7 @@ func setup():
 signal turn_finished
 signal finished
 signal total
+signal totalreceived
 
 @rpc("any_peer",'call_local')
 func player_played(player,piece = null):
@@ -82,6 +88,13 @@ func playerfinished(type):
 @rpc("any_peer",'call_local')
 func gettotal():
 	update_hand.emit('value')
+	var sum = await total
+	totalreceivedf.rpc_id(1,sum)
+	#totalreceived.emit(sum)
+	
+@rpc('any_peer','call_local')	
+func totalreceivedf(s):
+	totalreceived.emit(s)
 	
 @rpc("authority",'call_remote')
 func game_cycle():
@@ -90,7 +103,7 @@ func game_cycle():
 		return
 	
 	var turn = 0; #TODO Start with the highest	
-		
+	var end = false	
 	while true:
 		setup()
 		#  round turn loop
@@ -134,11 +147,25 @@ func game_cycle():
 				if (finished):
 					print('ROUND OVER')
 					print('PLAYER ' + str(player) + ' HAS WON')
+					var pointsround = 0
 					for others in players:
 						if others == player:
 							continue
 						gettotal.rpc_id(others)
-					await get_tree().create_timer(60).timeout
+						await get_tree().create_timer(0.1).timeout
+						var points = await totalreceived
+						pointsround += points
+					#await get_tree().create_timer(1).timeout
+					#print(pointsround)
+					var ps = players.get(player).score
+					ps += pointsround
+					players.get(player).score = ps
+					if ps > Target:
+						end = true
+						print('GAME')
+					else:
+						print('NEXT')
+					await get_tree().create_timer(10).timeout
 					break
 				
 				# Handler for placement
@@ -168,4 +195,5 @@ func game_cycle():
 			# check if player finished function
 			turn += 1;
 			turn %= len(players)
-		
+		if end:
+			break
