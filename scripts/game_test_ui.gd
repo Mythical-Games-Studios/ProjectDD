@@ -5,13 +5,18 @@ var cards = null
 
 @rpc("authority","call_local")
 func createbutton(value):
-	var button = Button.new()
-	button.name = str(value[0]) + '-' + str(value[1]) 
-	button.text = str(value)
-	button.set_h_size_flags(SIZE_SHRINK_CENTER)
+	var button = TextureButton.new()
+	var bn = str(value[0]) + '-' + str(value[1]) 
+	button.name = bn
+	#button.text = str(value)
+	button.texture_normal = CardTextures.root[bn]
+	#button.set_h_size_flags(SIZE_SHRINK_CENTER)
+	button.custom_minimum_size = Vector2(int($PanelContainer.size.x / 14), int($PanelContainer.size.y))
+	button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	container.add_child(button)
 	button.pressed.connect(func(): pressed(button,value))
 	button.disabled = true
+	button.modulate = Color(0.5,0.5,0.5,1)
 
 @rpc("authority","call_local")
 func removebutton(value):
@@ -43,12 +48,13 @@ func _ready() -> void:
 func enablebutton(value):
 	var n = str(value[0]) + '-' + str(value[1]) 
 	container.get_node(n).disabled = false
+	container.get_node(n).modulate = Color.WHITE
 	
 func disableall():
 	var c = container.get_children()
 	for i in c:
 		i.disabled = true
-		
+		i.modulate = Color(0.5,0.5,0.5,1)
 func reset():
 	#container
 	pass
