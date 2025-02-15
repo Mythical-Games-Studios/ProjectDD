@@ -59,3 +59,7 @@ func reset():
 	#container
 	pass
 	#TODO 
+	
+func updateground(value):
+	$GroundText.text = 'Ground: ' + str(value)
+	

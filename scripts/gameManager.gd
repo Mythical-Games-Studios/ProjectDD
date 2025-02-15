@@ -78,6 +78,7 @@ func player_played(player,piece = null):
 @rpc("any_peer","call_local")
 func updateground(data):
 	ground = data		
+	update_hand.emit('update',data)
 	if multiplayer.is_server():
 		print('UPDATED GROUND ',ground)
 		
