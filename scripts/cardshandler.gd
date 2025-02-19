@@ -51,7 +51,8 @@ func hand_handler(type,piece = null,id = 0):
 			#GameManager.turn_finished.emit([multiplayer.get_unique_id()])
 			GameManager.player_played.rpc(multiplayer.get_unique_id())
 			#GameManager.turn_finished.emit(multiplayer.get_unique_id(),avp[0])
-		#else:
+		else:
+			GUI.starttimer()
 		#await get_tree().create_timer(3).timeout
 		#GameManager.turn_finished.emit()
 	elif type == 'value':

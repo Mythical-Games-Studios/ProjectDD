@@ -55,6 +55,7 @@ func disableall():
 	for i in c:
 		i.disabled = true
 		i.modulate = Color(0.5,0.5,0.5,1)
+		
 func reset():
 	#container
 	pass
@@ -62,4 +63,25 @@ func reset():
 	
 func updateground(value):
 	$GroundText.text = 'Ground: ' + str(value)
+	
+func starttimer():
+	$TimerGUI.change = true;
+	$TimerGUI/Timer.start()
+	
+func timeout():
+	var c = [null]# value.duplicate(true)
+	c.append(multiplayer.get_unique_id())
+	#print(value)
+	#GameManager.turn_finished.emit(c)
+	GameManager.player_played.rpc(multiplayer.get_unique_id(),null)
+	GameManager.playerfinished.rpc(len(container.get_children()) - 1 == 0)
+	disableall()
+
+func stoptimer():
+	$TimerGUI.change = false;
+	$TimerGUI/Timer.stop()
+
+func _on_timer_timeout() -> void:
+	print('Out of time')
+	$TimerGUI/Timer.stop()
 	

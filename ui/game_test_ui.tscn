@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://08rr8wrcgf8h"]
+[gd_scene load_steps=3 format=3 uid="uid://08rr8wrcgf8h"]
 
 [ext_resource type="Script" path="res://scripts/game_test_ui.gd" id="1_vj7j7"]
+[ext_resource type="Script" path="res://scripts/timer_gui.gd" id="2_7q0gf"]
 
 [node name="GameUI" type="Control"]
 layout_mode = 3
@@ -102,3 +103,22 @@ offset_bottom = 64.0
 grow_horizontal = 0
 text = "GROUND: N/A"
 uppercase = true
+
+[node name="TimerGUI" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 64.0
+offset_right = 20.0
+offset_bottom = 87.0
+grow_horizontal = 2
+text = "20"
+horizontal_alignment = 1
+script = ExtResource("2_7q0gf")
+
+[node name="Timer" type="Timer" parent="TimerGUI"]
+wait_time = 20.0
+
+[connection signal="timeout" from="TimerGUI/Timer" to="." method="_on_timer_timeout"]
