@@ -11,6 +11,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0683s")
 
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.243137, 0.627451, 0.203922, 1)
+
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
 offset_left = 16.0
@@ -38,7 +47,7 @@ layout_mode = 2
 disabled = true
 text = "Start Game"
 
-[node name="Label" type="Label" parent="."]
+[node name="NameLabel" type="Label" parent="."]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 125.0
@@ -70,6 +79,18 @@ offset_top = 350.0
 offset_right = 433.0
 offset_bottom = 373.0
 text = "Player Count (0/4)"
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -435.0
+offset_top = -44.0
+offset_right = -136.0
+offset_bottom = -17.0
+grow_horizontal = 0
+text = "LALALA"
 
 [connection signal="button_down" from="PanelContainer/HBoxContainer/HostButton" to="." method="_on_host_button_button_down"]
 [connection signal="button_down" from="PanelContainer/HBoxContainer/JoinButton" to="." method="_on_join_button_button_down"]

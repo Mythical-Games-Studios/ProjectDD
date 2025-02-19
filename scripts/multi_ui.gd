@@ -31,9 +31,13 @@ func connectedServer():
 	print('Connected to Server')
 	#sendPlayerInfo.rpc_id(1,$LineEdit.text,multiplayer.get_unique_id())
 	sendPlayerInfo.rpc($LineEdit.text,multiplayer.get_unique_id())
+	changebuttonsstate(false)
+	statushandle('Connection Success!')
 	
 func connectionFailed():
 	print('Connection Fail')
+	changebuttonsstate(true)
+	statushandle('Connection Failed!')
 	
 	
 func _on_host_button_button_down() -> void:
@@ -42,6 +46,7 @@ func _on_host_button_button_down() -> void:
 	
 	if error != OK:
 		print('Error Could not Host')
+		statushandle('Hosting Error: Could not Host!')
 		return
 	
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
@@ -51,6 +56,8 @@ func _on_host_button_button_down() -> void:
 	$PanelContainer/HBoxContainer/StartButton.disabled = false
 	changePlayerCount()
 	print('Waiting for players')
+	statushandle('Hosting Success!')
+	changebuttonsstate(false)
 	
 @rpc('any_peer')
 func sendPlayerInfo(name, id):
@@ -120,12 +127,24 @@ func sendUpdate(message):
 	pass #TODO
 
 func changebuttonsstate(state):
+	state = not state
 	$PanelContainer/HBoxContainer/HostButton.disabled = state
 	$PanelContainer/HBoxContainer/JoinButton.disabled = state
 	
 func _on_line_edit_text_changed(new_text: String) -> void:
 	var text = $LineEdit.text
 	if text:
-		changebuttonsstate(false)
-	else:
 		changebuttonsstate(true)
+	else:
+		changebuttonsstate(false)
+		
+func animatestatus():
+	var tween = get_tree().create_tween()
+	tween.tween_property($StatusLabel, "position", Vector2(717, 50), 0.5)
+	await get_tree().create_timer(1.0).timeout
+	tween = get_tree().create_tween()
+	tween.tween_property($StatusLabel, "position", Vector2(717, -50), 0.5)
+
+func statushandle(text):
+	$StatusLabel.text = text
+	animatestatus()
