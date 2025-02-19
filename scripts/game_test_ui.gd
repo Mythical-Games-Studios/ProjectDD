@@ -69,12 +69,12 @@ func starttimer():
 	$TimerGUI/Timer.start()
 	
 func timeout():
-	var c = [null]# value.duplicate(true)
-	c.append(multiplayer.get_unique_id())
+	#var c = [null]# value.duplicate(true)
+	#c.append(multiplayer.get_unique_id())
 	#print(value)
 	#GameManager.turn_finished.emit(c)
 	GameManager.player_played.rpc(multiplayer.get_unique_id(),null)
-	GameManager.playerfinished.rpc(len(container.get_children()) - 1 == 0)
+	#GameManager.playerfinished.rpc(len(container.get_children()) - 1 == 0)
 	disableall()
 
 func stoptimer():
@@ -84,4 +84,4 @@ func stoptimer():
 func _on_timer_timeout() -> void:
 	print('Out of time')
 	$TimerGUI/Timer.stop()
-	
+	timeout()
