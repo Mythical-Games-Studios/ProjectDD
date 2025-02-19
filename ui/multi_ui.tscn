@@ -25,10 +25,12 @@ alignment = 1
 
 [node name="HostButton" type="Button" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Host Game"
 
 [node name="JoinButton" type="Button" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Join Game"
 
 [node name="StartButton" type="Button" parent="PanelContainer/HBoxContainer"]
@@ -72,3 +74,4 @@ text = "Player Count (0/4)"
 [connection signal="button_down" from="PanelContainer/HBoxContainer/HostButton" to="." method="_on_host_button_button_down"]
 [connection signal="button_down" from="PanelContainer/HBoxContainer/JoinButton" to="." method="_on_join_button_button_down"]
 [connection signal="button_down" from="PanelContainer/HBoxContainer/StartButton" to="." method="_on_start_button_button_down"]
+[connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]

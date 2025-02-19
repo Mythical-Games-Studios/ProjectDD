@@ -118,3 +118,14 @@ func changePlayerCount():
 @rpc("call_local",'any_peer')
 func sendUpdate(message):
 	pass #TODO
+
+func changebuttonsstate(state):
+	$PanelContainer/HBoxContainer/HostButton.disabled = state
+	$PanelContainer/HBoxContainer/JoinButton.disabled = state
+	
+func _on_line_edit_text_changed(new_text: String) -> void:
+	var text = $LineEdit.text
+	if text:
+		changebuttonsstate(false)
+	else:
+		changebuttonsstate(true)
