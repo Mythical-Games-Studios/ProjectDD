@@ -21,6 +21,7 @@ func peerDisonnected(id):
 		# Host has left
 		GameManager.players.clear()
 		$LineEdit.editable = true
+		changebuttonsstate(true)
 	else:
 		GameManager.players.erase(id);
 	getPlayerNames.rpc()

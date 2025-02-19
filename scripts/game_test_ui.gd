@@ -29,6 +29,7 @@ func removebutton(value):
 func pressed(button,value):
 	var c = value.duplicate(true)
 	c.append(multiplayer.get_unique_id())
+	stoptimer()
 	#print(value)
 	#GameManager.turn_finished.emit(c)
 	GameManager.player_played.rpc(multiplayer.get_unique_id(),value)
