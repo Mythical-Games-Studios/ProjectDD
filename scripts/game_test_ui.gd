@@ -68,6 +68,7 @@ func updateground(value):
 func starttimer():
 	$TimerGUI.change = true;
 	$TimerGUI/Timer.start()
+	$TimerGUI.visible = true
 	
 func timeout():
 	#var c = [null]# value.duplicate(true)
@@ -81,8 +82,10 @@ func timeout():
 func stoptimer():
 	$TimerGUI.change = false;
 	$TimerGUI/Timer.stop()
+	$TimerGUI.visible = false
 
 func _on_timer_timeout() -> void:
 	print('Out of time')
 	$TimerGUI/Timer.stop()
 	timeout()
+	$TimerGUI.visible = false

@@ -91,6 +91,7 @@ offset_right = -136.0
 offset_bottom = -17.0
 grow_horizontal = 0
 text = "LALALA"
+horizontal_alignment = 1
 
 [connection signal="button_down" from="PanelContainer/HBoxContainer/HostButton" to="." method="_on_host_button_button_down"]
 [connection signal="button_down" from="PanelContainer/HBoxContainer/JoinButton" to="." method="_on_join_button_button_down"]
