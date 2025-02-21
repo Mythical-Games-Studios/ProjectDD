@@ -39,6 +39,7 @@ func pressed(button,value):
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	container = $PanelContainer/GridContainer
+	setupleadergui()
 	pass # Replace with function body.
 
 
@@ -89,3 +90,33 @@ func _on_timer_timeout() -> void:
 	$TimerGUI/Timer.stop()
 	timeout()
 	$TimerGUI.visible = false
+	
+func setupleadergui():
+	var players = GameManager.players
+	var entryUI = $LeaderboardContainer/GridContainer/Entry
+	var parent = $LeaderboardContainer/GridContainer
+	for x in parent.get_children():
+		if x == entryUI:
+			continue
+		parent.remove_child(x)
+		x.queue_free()
+	
+	for i in players:
+		var cloneUI = entryUI.duplicate()
+		parent.add_child(cloneUI)
+		cloneUI.name = 'Entry ' + str(i)
+		cloneUI.visible = true
+		cloneUI.get_node('Username').text = players[i].name
+		cloneUI.get_node('Score').text = str(players[i].score)
+		
+func updateleadergui(id):
+	var parent = $LeaderboardContainer/GridContainer
+	var node = parent.get_node('Entry ' + str(id))
+	node.get_node('Score').text = str(GameManager.players[id].score)
+	
+func displayleadergui():
+	var parent = $LeaderboardContainer
+	parent.visible = true
+	print(OK)
+	await  get_tree().create_timer(5).timeout
+	parent.visible = false

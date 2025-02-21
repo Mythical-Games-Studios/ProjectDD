@@ -50,44 +50,16 @@ grow_vertical = 2
 [node name="GridContainer" type="GridContainer" parent="LeaderboardContainer"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="LeaderboardContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="HSplitContainer" type="HSplitContainer" parent="LeaderboardContainer/GridContainer/MarginContainer"]
+[node name="Entry" type="HSplitContainer" parent="LeaderboardContainer/GridContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="LeaderboardContainer/GridContainer/MarginContainer/HSplitContainer"]
+[node name="Username" type="Label" parent="LeaderboardContainer/GridContainer/Entry"]
 layout_mode = 2
-text = "Player 1 iiii"
+text = "PlayerName"
 
-[node name="Label2" type="Label" parent="LeaderboardContainer/GridContainer/MarginContainer/HSplitContainer"]
-layout_mode = 2
-text = "0"
-horizontal_alignment = 2
-
-[node name="MarginContainer2" type="MarginContainer" parent="LeaderboardContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="HSplitContainer" type="HSplitContainer" parent="LeaderboardContainer/GridContainer/MarginContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="LeaderboardContainer/GridContainer/MarginContainer2/HSplitContainer"]
-layout_mode = 2
-text = "Player 1 iiii"
-
-[node name="Label2" type="Label" parent="LeaderboardContainer/GridContainer/MarginContainer2/HSplitContainer"]
+[node name="Score" type="Label" parent="LeaderboardContainer/GridContainer/Entry"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
@@ -124,5 +96,18 @@ script = ExtResource("2_7q0gf")
 
 [node name="Timer" type="Timer" parent="TimerGUI"]
 wait_time = 20.0
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 2
+offset_left = 427.0
+offset_top = 63.0
+offset_right = 725.0
+offset_bottom = 95.0
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [connection signal="timeout" from="TimerGUI/Timer" to="." method="_on_timer_timeout"]

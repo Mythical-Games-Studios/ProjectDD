@@ -97,6 +97,11 @@ func gettotal():
 func totalreceivedf(s):
 	totalreceived.emit(s)
 	
+@rpc("any_peer",'call_local')
+func updateleaderboard(id,ns):
+	players[id].score += ns
+	update_hand.emit('leader',id)
+	
 @rpc("authority",'call_remote')
 func game_cycle():
 	# Server Only
@@ -145,29 +150,7 @@ func game_cycle():
 				print(piece)
 				
 				var finished = await finished
-				if (finished):
-					print('ROUND OVER')
-					print('PLAYER ' + str(player) + ' HAS WON')
-					var pointsround = 0
-					for others in players:
-						if others == player:
-							continue
-						gettotal.rpc_id(others)
-						await get_tree().create_timer(0.1).timeout
-						var points = await totalreceived
-						pointsround += points
-					#await get_tree().create_timer(1).timeout
-					#print(pointsround)
-					var ps = players.get(player).score
-					ps += pointsround
-					players.get(player).score = ps
-					if ps > Target:
-						end = true
-						print('GAME')
-					else:
-						print('NEXT')
-					await get_tree().create_timer(10).timeout
-					break
+				
 				
 				# Handler for placement
 				# -1 -> nothing replace completely
@@ -191,6 +174,31 @@ func game_cycle():
 					
 				updateground.rpc(ground)
 				played.rpc_id(player,piece)
+				
+				if (finished):
+					print('ROUND OVER')
+					print('PLAYER ' + str(player) + ' HAS WON')
+					var pointsround = 0
+					for others in players:
+						if others == player:
+							continue
+						gettotal.rpc_id(others)
+						await get_tree().create_timer(0.1).timeout
+						var points = await totalreceived
+						pointsround += points
+					#await get_tree().create_timer(1).timeout
+					#print(pointsround)
+					var ps = players.get(player).score
+					updateleaderboard.rpc(player,pointsround)
+					await get_tree().create_timer(6).timeout
+					players.get(player).score = ps
+					if ps > Target:
+						end = true
+						print('GAME')
+					else:
+						print('NEXT')
+					await get_tree().create_timer(600).timeout
+					break
 			
 			
 			# check if player finished function
