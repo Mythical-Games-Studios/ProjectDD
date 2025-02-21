@@ -22,6 +22,7 @@ CardTextures="*res://scripts/card_textures.gd"
 
 [display]
 
+window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
 [dotnet]
@@ -42,5 +43,6 @@ enabled=PackedStringArray()
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
 textures/lossless_compression/force_png=true
 2d/snap/snap_2d_transforms_to_pixel=true

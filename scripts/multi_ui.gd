@@ -21,6 +21,7 @@ func peerDisonnected(id):
 		# Host has left
 		GameManager.players.clear()
 		$LineEdit.editable = true
+		ipedit('',true)
 		changebuttonsstate(true)
 	else:
 		GameManager.players.erase(id);
@@ -42,6 +43,9 @@ func connectionFailed():
 	
 	
 func _on_host_button_button_down() -> void:
+	
+	var ip = get_local_ip()
+	ipedit(ip,false)
 	peer = ENetMultiplayerPeer.new()
 	var error = peer.create_server(port,4)
 	
@@ -94,9 +98,11 @@ func getPlayerNames():
 			node.add_child(label)
 
 func _on_join_button_button_down() -> void:
+	var address = $IPLabel.text
 	peer = ENetMultiplayerPeer.new()
 	peer.create_client(address, port)
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
+	ipedit(address,false)
 	multiplayer.set_multiplayer_peer(peer)	
 	$LineEdit.editable = false
 
@@ -151,3 +157,16 @@ func animatestatus():
 func statushandle(text):
 	$StatusLabel.text = text
 	animatestatus()
+
+
+
+func get_local_ip():
+	for address in IP.get_local_addresses():
+		if address.begins_with("192.168.") or address.begins_with("10.") or address.begins_with("172."):
+			return address
+	return "127.0.0.1" # Fallback if no local IP is found
+	
+	
+func ipedit(value,state):
+	$IPLabel.text = value
+	$IPLabel.editable = state
