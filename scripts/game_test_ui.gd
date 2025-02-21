@@ -25,6 +25,12 @@ func removebutton(value):
 	container.remove_child(button)
 	button.queue_free()
 	
+@rpc("authority","call_local")
+func clear():
+	for x in container.get_children():
+		container.remove_child(x)
+		x.queue_free()
+	
 
 func pressed(button,value):
 	var c = value.duplicate(true)
@@ -117,6 +123,12 @@ func updateleadergui(id):
 func displayleadergui():
 	var parent = $LeaderboardContainer
 	parent.visible = true
-	print(OK)
 	await  get_tree().create_timer(5).timeout
+	parent.visible = false
+	
+func displaygamestatgui(message):
+	var parent = $GameStatusLabel
+	parent.text = message
+	parent.visible = true
+	await  get_tree().create_timer(1.5).timeout
 	parent.visible = false

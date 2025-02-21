@@ -115,6 +115,8 @@ func startGame():
 	self.hide()
 	sendPlayerInfo($LineEdit.text,multiplayer.get_unique_id())
 	print('START')
+	GameManager.world = scene
+	GameManager.mui = self
 	GameManager.game_cycle()
 	
 	

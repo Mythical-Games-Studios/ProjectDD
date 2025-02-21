@@ -2,8 +2,9 @@ extends Node
 
 var players = {}
 var ground = [-1,-1]
-var PS = 0
-var Target = 7
+var target = 4
+var world = null
+var mui = null
 signal update_hand(type,card,id)
 
 # 28 Pieces
@@ -25,11 +26,8 @@ func resetscore():
 		players[i].score = 0	
 	
 @rpc("authority",'call_local')
-func reset():
+func resetdeck():
 	deck = DOMINOS.duplicate(true)
-	update_hand.emit('clear')
-	ground = [-1,-1]
-	PS = 0
 	
 	
 @rpc("authority",'call_local')
@@ -49,21 +47,38 @@ func player_turn(player):
 @rpc("any_peer",'call_local')
 func played(piece):
 	update_hand.emit('remove',piece)
-	
+
+@rpc("any_peer",'call_local')
+func resetplayerhand()	:
+	update_hand.emit('clear')
+	ground = [-1,-1]
 
 @rpc('authority','call_remote')
-func setup():
+func setup_init():
 	if not multiplayer.is_server():
 		return
-	reset()
+	resetdeck()
 	for player in players:
 		resetscore.rpc_id(player)
+		resetplayerhand.rpc_id(player)
 		for c in range(0,1): #range(0,7): DEBUG
 			var i = randi_range(0,len(deck) - 1)
 			var piece = deck[i]
 			deck.remove_at(i)
 			give_domino.rpc_id(players[player].id,piece)
 
+@rpc('authority','call_remote')
+func setup():
+	if not multiplayer.is_server():
+		return
+	resetdeck()
+	for player in players:
+		resetplayerhand.rpc_id(player)
+		for c in range(0,1): #range(0,7): DEBUG
+			var i = randi_range(0,len(deck) - 1)
+			var piece = deck[i]
+			deck.remove_at(i)
+			give_domino.rpc_id(players[player].id,piece)
 
 signal turn_finished
 signal finished
@@ -102,6 +117,10 @@ func updateleaderboard(id,ns):
 	players[id].score += ns
 	update_hand.emit('leader',id)
 	
+@rpc("any_peer",'call_local')
+func sendmessage(message):
+	update_hand.emit('message',message)
+	
 @rpc("authority",'call_remote')
 func game_cycle():
 	# Server Only
@@ -110,8 +129,12 @@ func game_cycle():
 	
 	var turn = 0; #TODO Start with the highest	
 	var end = false	
+	var round = 1
 	while true:
-		setup()
+		if round == 1:
+			setup_init()
+		else:
+			setup()
 		#  round turn loop
 		while true:
 			var player = players.values()[turn].id
@@ -188,16 +211,21 @@ func game_cycle():
 						pointsround += points
 					#await get_tree().create_timer(1).timeout
 					#print(pointsround)
-					var ps = players.get(player).score
+					
 					updateleaderboard.rpc(player,pointsround)
-					await get_tree().create_timer(6).timeout
-					players.get(player).score = ps
-					if ps > Target:
+					await get_tree().create_timer(5.5).timeout
+					var ps = players.get(player).score
+					
+					if ps > target:
 						end = true
 						print('GAME')
+						sendmessage.rpc('GAME! Player ' + players[player].name + ' has won!')
 					else:
 						print('NEXT')
-					await get_tree().create_timer(600).timeout
+						round += 1
+						sendmessage.rpc('Next Round ' + str(round))
+						resetplayerhand.rpc()
+					await get_tree().create_timer(3).timeout
 					break
 			
 			
@@ -206,3 +234,13 @@ func game_cycle():
 			turn %= len(players)
 		if end:
 			break
+		print('next round')
+		
+	returnhome.rpc()
+
+
+@rpc("any_peer",'call_local')
+func returnhome():
+	get_tree().root.remove_child(world)
+	world.queue_free()
+	mui.visible = true

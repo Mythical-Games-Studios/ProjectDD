@@ -37,6 +37,8 @@ func hand_handler(type,piece = null,id = 0):
 		GUI.createbutton.rpc_id(multiplayer.get_unique_id(),piece)
 	elif type == 'clear':
 		deck.clear()
+		GUI.clear.rpc_id(multiplayer.get_unique_id())
+		GUI.updateground('N/A')
 	elif type == 'remove':
 		deck.erase(piece)
 		GUI.removebutton.rpc_id(multiplayer.get_unique_id(),piece)
@@ -44,10 +46,13 @@ func hand_handler(type,piece = null,id = 0):
 		# Wait 1 second to make sure server is ready to receive signal
 		await get_tree().create_timer(1).timeout
 		print('Player ' + str(multiplayer.get_unique_id()) + ' turn')
+		GUI.displaygamestatgui("It's your turn!")
+		await get_tree().create_timer(0.3).timeout	
 		var avp = getavaliableplays()
 		print(avp)
 		if not len(avp):
 			print('NO PIECE')
+			GUI.displaygamestatgui("SKIP")
 			#GameManager.turn_finished.emit([multiplayer.get_unique_id()])
 			GameManager.player_played.rpc(multiplayer.get_unique_id())
 			#GameManager.turn_finished.emit(multiplayer.get_unique_id(),avp[0])
@@ -68,3 +73,7 @@ func hand_handler(type,piece = null,id = 0):
 	elif type == 'leader':
 		GUI.updateleadergui(piece)
 		GUI.displayleadergui()
+
+	elif type == 'message':
+		GUI.displaygamestatgui(piece)
+		
