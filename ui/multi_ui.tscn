@@ -129,6 +129,23 @@ offset_bottom = 35.0
 text = "IP:"
 horizontal_alignment = 1
 
+[node name="Credits" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -53.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "©2025 
+game by MythicalPlayz"
+horizontal_alignment = 2
+
 [connection signal="button_down" from="PanelContainer/HBoxContainer/HostButton" to="." method="_on_host_button_button_down"]
 [connection signal="button_down" from="PanelContainer/HBoxContainer/JoinButton" to="." method="_on_join_button_button_down"]
 [connection signal="button_down" from="PanelContainer/HBoxContainer/StartButton" to="." method="_on_start_button_button_down"]
