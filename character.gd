@@ -17,10 +17,11 @@ func _input(event: InputEvent) -> void:
 		var reqrotx = -event.relative.y * MOUSE_SEN
 		if (rot_y < 70 and reqroty > 0) or (rot_y > -70 and reqroty < 0):
 			rot_y += reqroty 
-			CAMERA.rotate_y(deg_to_rad(reqroty))
-		#if (rot_x < 70 and reqrotx > 0) or (rot_x > -70 and reqrotx < 0):
-			#rot_x += reqrotx 
-			#CAMERA.rotation.x += (deg_to_rad(reqrotx))
+			#CAMERA.rotate_y(deg_to_rad(reqroty))
+			CAMERA.rotation.y += (deg_to_rad(reqroty))
+		if (rot_x < 70 and reqrotx > 0) or (rot_x > -70 and reqrotx < 0):
+			rot_x += reqrotx 
+			CAMERA.rotation.z += (deg_to_rad(reqrotx))
 	
 func _ready() -> void:
 	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
