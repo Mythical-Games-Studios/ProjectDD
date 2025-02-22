@@ -21,8 +21,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -356.0
-offset_top = -157.0
+offset_top = -148.0
 offset_right = 356.0
+offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -40,10 +41,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -149.0
+offset_left = -308.0
 offset_top = -261.0
-offset_right = 149.0
-offset_bottom = 20.0
+offset_right = 308.0
+offset_bottom = 121.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -58,10 +59,12 @@ size_flags_horizontal = 3
 [node name="Username" type="Label" parent="LeaderboardContainer/GridContainer/Entry"]
 layout_mode = 2
 text = "PlayerName"
+label_settings = ExtResource("2_u0yxm")
 
 [node name="Score" type="Label" parent="LeaderboardContainer/GridContainer/Entry"]
 layout_mode = 2
 text = "0"
+label_settings = ExtResource("2_u0yxm")
 horizontal_alignment = 2
 
 [node name="GroundText" type="Label" parent="."]
