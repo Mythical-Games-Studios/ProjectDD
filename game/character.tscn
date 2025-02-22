@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://cpd6y2vqm1hs"]
 
-[ext_resource type="Script" path="res://character.gd" id="1_hxccs"]
+[ext_resource type="Script" path="res://scripts/character.gd" id="1_hxccs"]
 [ext_resource type="Script" path="res://scripts/playername3d.gd" id="2_fgs4c"]
 [ext_resource type="Script" path="res://scripts/cardshandler.gd" id="3_a2cp4"]
 [ext_resource type="PackedScene" uid="uid://08rr8wrcgf8h" path="res://ui/game_test_ui.tscn" id="4_h162u"]
