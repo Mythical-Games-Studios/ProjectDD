@@ -5,6 +5,7 @@ var ground = [-1,-1]
 var target = 4
 var world = null
 var mui = null
+var ingame = false
 signal update_hand(type,card,id)
 
 # 28 Pieces
@@ -244,3 +245,4 @@ func returnhome():
 	get_tree().root.remove_child(world)
 	world.queue_free()
 	mui.visible = true
+	ingame = false

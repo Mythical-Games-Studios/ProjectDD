@@ -17,6 +17,10 @@ func peerConnected(id):
 	
 func peerDisonnected(id):
 	print('Player has disonnected: ' + str(id))
+	
+	if GameManager.ingame:
+		GameManager.returnhome()
+	
 	if id == 1:
 		# Host has left
 		GameManager.players.clear()
@@ -126,6 +130,7 @@ func startGame():
 	print('START')
 	GameManager.world = scene
 	GameManager.mui = self
+	GameManager.ingame = true
 	GameManager.game_cycle()
 	
 	
