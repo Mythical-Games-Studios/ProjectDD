@@ -205,7 +205,7 @@ func game_cycle():
 				if (finished):
 					print('ROUND OVER')
 					print('PLAYER ' + str(player) + ' HAS WON')
-					sendmessage.rpc('PLAYER ' + str(player) + ' HAS WON! (finished)')
+					sendmessage.rpc('PLAYER ' + players[player].name + ' HAS WON! (finished)')
 					await get_tree().create_timer(3).timeout
 					var pointsround = 0
 					for others in players:
@@ -257,7 +257,7 @@ func game_cycle():
 				else:
 					var p = players[pointsround[0][1]].name
 					print('PLAYER ' + str(player) + ' HAS WON')
-					sendmessage.rpc('PLAYER ' + str(player) + ' HAS WON! (least piece points)')
+					sendmessage.rpc('PLAYER ' + players[player].name + ' HAS WON! (least piece points)')
 					await get_tree().create_timer(3).timeout
 					var gp = 0
 					for x in range(1,len(players)):
