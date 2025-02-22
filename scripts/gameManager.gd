@@ -2,7 +2,7 @@ extends Node
 
 var players = {}
 var ground = [-1,-1]
-var target = 4
+var target = 50
 var world = null
 var mui = null
 var ingame = false
@@ -62,7 +62,7 @@ func setup_init():
 	for player in players:
 		resetscore.rpc_id(player)
 		resetplayerhand.rpc_id(player)
-		for c in range(0,1): #range(0,7): DEBUG
+		for c in range(0,7): #range(0,7): DEBUG
 			var i = randi_range(0,len(deck) - 1)
 			var piece = deck[i]
 			deck.remove_at(i)
@@ -75,7 +75,7 @@ func setup():
 	resetdeck()
 	for player in players:
 		resetplayerhand.rpc_id(player)
-		for c in range(0,1): #range(0,7): DEBUG
+		for c in range(0,7): #range(0,7): DEBUG
 			var i = randi_range(0,len(deck) - 1)
 			var piece = deck[i]
 			deck.remove_at(i)
@@ -137,6 +137,7 @@ func game_cycle():
 		else:
 			setup()
 		#  round turn loop
+		var skippedplayers = 0
 		while true:
 			var player = players.values()[turn].id
 			player_turn.rpc_id(player,player)
@@ -169,7 +170,9 @@ func game_cycle():
 					print('Give piece from deck, remaining: ' + str(len(deck)))
 				else:
 					print('SKIP')
+					skippedplayers += 1
 			else:
+				skippedplayers = 0
 				print('Player played')
 				print(piece)
 				
@@ -230,7 +233,48 @@ func game_cycle():
 					break
 			
 			
-			# check if player finished function
+			if (skippedplayers == len(players)):
+				# closed
+				print('CLOSED')
+				sendmessage.rpc('CLOSED!')
+				await get_tree().create_timer(1).timeout
+				# get players score
+				var pointsround = []
+				for ply in players:
+					gettotal.rpc_id(ply)
+					await get_tree().create_timer(0.1).timeout
+					var points = await totalreceived
+					pointsround.append([points,ply])
+				# sort based on score
+				pointsround.sort()
+				
+				if pointsround[0][0] == pointsround[1][0]:
+					print('TIE')
+					sendmessage.rpc('TIE NO POINTS!')
+					await get_tree().create_timer(3).timeout
+				else:
+					var p = players[pointsround[0][1]].name
+					print('PLAYER ' + str(player) + ' HAS WON')
+					var gp = 0
+					for x in range(1,len(players)):
+						gp += pointsround[x][0]
+						
+					updateleaderboard.rpc(player,gp)
+					await get_tree().create_timer(5.5).timeout
+					var ps = players.get(player).score
+					
+					if ps > target:
+						end = true
+						print('GAME')
+						sendmessage.rpc('GAME! Player ' + players[player].name + ' has won!')
+					else:
+						print('NEXT')
+						round += 1
+						sendmessage.rpc('Next Round ' + str(round))
+						resetplayerhand.rpc()
+					await get_tree().create_timer(3).timeout
+					break
+				
 			turn += 1;
 			turn %= len(players)
 		if end:
