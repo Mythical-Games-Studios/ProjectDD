@@ -111,6 +111,9 @@ func _on_start_button_button_down() -> void:
 	# Only have host start
 	if multiplayer.get_unique_id() != 1:
 		return
+	if len(GameManager.players) < 2:
+		statushandle('Error: Can not start with 1 player')
+		return
 	startGame.rpc()
 	pass # Replace with function body.
 	
@@ -149,10 +152,10 @@ func _on_line_edit_text_changed(new_text: String) -> void:
 		
 func animatestatus():
 	var tween = get_tree().create_tween()
-	tween.tween_property($StatusLabel, "position", Vector2(717, 50), 0.5)
+	tween.tween_property($StatusLabel, "position", Vector2($StatusLabel.position.x, 50), 0.5)
 	await get_tree().create_timer(1.0).timeout
 	tween = get_tree().create_tween()
-	tween.tween_property($StatusLabel, "position", Vector2(717, -50), 0.5)
+	tween.tween_property($StatusLabel, "position", Vector2($StatusLabel.position.x, -50), 0.5)
 
 func statushandle(text):
 	$StatusLabel.text = text
