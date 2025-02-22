@@ -47,3 +47,15 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 1, 0.0
 
 [node name="1" type="Node3D" parent="chair2" groups=["SpawnLocations"]]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.6, 1, -1)
+
+[node name="chair3" parent="." instance=ExtResource("3_nluus")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.95388, 0.1, -0.0387025)
+
+[node name="2" type="Node3D" parent="chair3" groups=["SpawnLocations"]]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.6, 1, -1)
+
+[node name="chair4" parent="." instance=ExtResource("3_nluus")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.7512, 0.1, -1.08901)
+
+[node name="3" type="Node3D" parent="chair4" groups=["SpawnLocations"]]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.6, 1, -1)
