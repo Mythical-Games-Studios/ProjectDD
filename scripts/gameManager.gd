@@ -115,7 +115,7 @@ func totalreceivedf(s):
 @rpc("any_peer",'call_local')
 func updateleaderboard(id,ns):
 	players[id].score += ns
-	update_hand.emit('leader',id)
+	update_hand.emit('leader')
 	
 @rpc("any_peer",'call_local')
 func sendmessage(message):

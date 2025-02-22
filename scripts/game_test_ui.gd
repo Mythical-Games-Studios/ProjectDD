@@ -115,10 +115,11 @@ func setupleadergui():
 		cloneUI.get_node('Username').text = players[i].name
 		cloneUI.get_node('Score').text = str(players[i].score)
 		
-func updateleadergui(id):
+func updateleadergui():
 	var parent = $LeaderboardContainer/GridContainer
-	var node = parent.get_node('Entry ' + str(id))
-	node.get_node('Score').text = str(GameManager.players[id].score)
+	for pid in GameManager.players:
+		var node = parent.get_node('Entry ' + str(pid))
+		node.get_node('Score').text = str(GameManager.players[pid].score)
 	
 func displayleadergui():
 	var parent = $LeaderboardContainer

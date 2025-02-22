@@ -71,7 +71,7 @@ func hand_handler(type,piece = null,id = 0):
 		GUI.updateground(piece)
 		
 	elif type == 'leader':
-		GUI.updateleadergui(piece)
+		GUI.updateleadergui()
 		GUI.displayleadergui()
 
 	elif type == 'message':
