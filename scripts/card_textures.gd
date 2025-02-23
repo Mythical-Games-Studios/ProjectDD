@@ -1,5 +1,6 @@
 extends Node
 
+# preload all pieces
 const root = {
 	'0-0': preload("res://assets/dominos_ui/0-0.tres"),
 	'0-1': preload("res://assets/dominos_ui/0-1.tres"),

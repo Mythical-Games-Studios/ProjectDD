@@ -14,7 +14,7 @@
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_iaypj")
-PlayerScene = ExtResource("1_jkfw2")
+player_node = ExtResource("1_jkfw2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 0.1, 0, 0, 0, 10, 0, 0, 0)
