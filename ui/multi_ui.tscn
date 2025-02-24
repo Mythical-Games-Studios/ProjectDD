@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.114257, 0.318235, 0.0933406, 1)
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="MutiplayerButtonPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -30,22 +30,25 @@ anchor_bottom = 0.1
 offset_right = 420.0
 offset_bottom = 100.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+[node name="Container" type="HBoxContainer" parent="MutiplayerButtonPanel"]
 layout_mode = 2
 theme_override_constants/separation = 50
 alignment = 1
 
-[node name="HostButton" type="Button" parent="PanelContainer/HBoxContainer"]
+[node name="HostButton" type="Button" parent="MutiplayerButtonPanel/Container"]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "Host Game"
 
-[node name="JoinButton" type="Button" parent="PanelContainer/HBoxContainer"]
+[node name="JoinButton" type="Button" parent="MutiplayerButtonPanel/Container"]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "Join Game"
 
-[node name="StartButton" type="Button" parent="PanelContainer/HBoxContainer"]
+[node name="StartButton" type="Button" parent="MutiplayerButtonPanel/Container"]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "Start Game"
@@ -61,7 +64,8 @@ offset_right = 51.0
 offset_bottom = 35.0
 text = "Name:"
 
-[node name="LineEdit" type="LineEdit" parent="."]
+[node name="PlayerNameLabel" type="LineEdit" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.1
@@ -71,7 +75,8 @@ anchor_bottom = 0.273
 offset_right = 341.0
 offset_bottom = 31.0
 
-[node name="Players" type="PanelContainer" parent="."]
+[node name="PlayersPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -81,10 +86,11 @@ anchor_bottom = 0.7
 offset_right = 360.4
 offset_bottom = 109.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Players"]
+[node name="Container" type="VBoxContainer" parent="PlayersPanel"]
 layout_mode = 2
 
-[node name="PlayerCount" type="Label" parent="."]
+[node name="PlayerCountLabel" type="Label" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -146,7 +152,7 @@ text = "©2025
 game by MythicalPlayz"
 horizontal_alignment = 2
 
-[connection signal="button_down" from="PanelContainer/HBoxContainer/HostButton" to="." method="_on_host_button_button_down"]
-[connection signal="button_down" from="PanelContainer/HBoxContainer/JoinButton" to="." method="_on_join_button_button_down"]
-[connection signal="button_down" from="PanelContainer/HBoxContainer/StartButton" to="." method="_on_start_button_button_down"]
-[connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="button_down" from="MutiplayerButtonPanel/Container/HostButton" to="." method="_on_host_button_button_down"]
+[connection signal="button_down" from="MutiplayerButtonPanel/Container/JoinButton" to="." method="_on_join_button_button_down"]
+[connection signal="button_down" from="MutiplayerButtonPanel/Container/StartButton" to="." method="_on_start_button_button_down"]
+[connection signal="text_changed" from="PlayerNameLabel" to="." method="_on_line_edit_text_changed"]
