@@ -1,0 +1,133 @@
+[gd_scene load_steps=4 format=3 uid="uid://d80oahnp4vhm"]
+
+[ext_resource type="Script" path="res://scripts/local_multiplayer_handler.gd" id="1_bhb53"]
+[ext_resource type="LabelSettings" uid="uid://c4hftu5nw3icx" path="res://assets/fonts/ingamefonts.tres" id="2_c2uex"]
+[ext_resource type="Script" path="res://scripts/version_label.gd" id="3_k6kmc"]
+
+[node name="LocalMultiplayerHandler" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bhb53")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.114257, 0.318235, 0.0933406, 1)
+
+[node name="Credits" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -53.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "©2025 
+game by MythicalPlayz"
+horizontal_alignment = 2
+
+[node name="HostButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.45
+anchor_top = 0.1
+anchor_right = 0.55
+anchor_bottom = 0.2
+offset_left = -47.0
+offset_right = 47.0
+offset_bottom = 31.0
+grow_horizontal = 2
+disabled = true
+text = "Host Game"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.45
+anchor_top = 0.3
+anchor_right = 0.55
+anchor_bottom = 0.3
+offset_left = -65.0
+offset_right = 65.0
+offset_bottom = 31.0
+grow_horizontal = 2
+
+[node name="NameLabel" type="Label" parent="HSplitContainer"]
+layout_mode = 2
+text = "Name:"
+
+[node name="PlayerNameLabel" type="LineEdit" parent="HSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LobbiesContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.4
+anchor_right = 0.6
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="LobbiesContainer"]
+layout_mode = 2
+split_offset = 8
+
+[node name="LobbiesLabel" type="Label" parent="LobbiesContainer/VSplitContainer"]
+layout_mode = 2
+text = "Lobbies"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LobbiesContainer/VSplitContainer"]
+layout_mode = 2
+
+[node name="LobbyListContainer" type="VBoxContainer" parent="LobbiesContainer/VSplitContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="LobbiesContainer/VSplitContainer/ScrollContainer/LobbyListContainer"]
+layout_mode = 2
+text = "Super Mario (1/4)"
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 67.0
+grow_horizontal = 2
+text = "DOMINOS DOMINATION - Local Play"
+label_settings = ExtResource("2_c2uex")
+horizontal_alignment = 1
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -43.0
+offset_right = 137.0
+offset_bottom = -20.0
+grow_vertical = 0
+text = "Version W.W.W"
+script = ExtResource("3_k6kmc")
+
+[connection signal="button_down" from="HostButton" to="." method="_on_host_button_button_down"]
+[connection signal="text_changed" from="HSplitContainer/PlayerNameLabel" to="." method="_on_line_edit_text_changed"]
