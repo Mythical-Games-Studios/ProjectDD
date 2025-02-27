@@ -102,10 +102,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="LobbiesContainer/VSplitContainer/ScrollContainer/LobbyListContainer"]
-layout_mode = 2
-text = "Super Mario (1/4)"
-
 [node name="TitleLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 10

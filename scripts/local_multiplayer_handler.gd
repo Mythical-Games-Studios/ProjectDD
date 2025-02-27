@@ -4,11 +4,11 @@ extends Control
 @export var address = "127.0.0.1"
 @export var port = 18042
 
-var udp := PacketPeerUDP.new()
-var udp_address = '255.255.255.255'
+var udp_broadcast := PacketPeerUDP.new() # For sending broadcasts
+var udp_listener := PacketPeerUDP.new()  # For listening to broadcasts
+var udp_address = "255.255.255.255"
 var udp_port = 23404
 var peer
-
 var lobbies = {}
 
 # ready function
@@ -17,6 +17,7 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(peerDisonnected)
 	multiplayer.connected_to_server.connect(connectedServer)
 	multiplayer.connection_failed.connect(connectionFailed)
+	multiplayer.server_disconnected.connect(disconnectedServer)
 	listen_udp()
 
 # peer Connected (runs on clients/server)
@@ -54,6 +55,11 @@ func connectedServer():
 	# Disable UI
 	send_playerinfo_toserver.rpc(%PlayerNameLabel.text,multiplayer.get_unique_id())
 	changebuttonsstate(false)
+	stop_listen_udp()
+
+# disconnected Server (client)
+func disconnectedServer():
+	listen_udp()
 	
 # connection Failed (client)
 func connectionFailed():
@@ -90,9 +96,8 @@ func _on_host_button_button_down() -> void:
 	changebuttonsstate(false)
 	
 	# udp broadcast
-	udp.set_broadcast_enabled(true)
-	udp.set_dest_address(udp_address, udp_port)
 	broadcast_udp()
+	stop_listen_udp()
 	
 	# send player to lobby ui
 	send_to_lobby()
@@ -222,6 +227,8 @@ func changebuttonsstate(state):
 	# reverse the state and set disabled
 	state = not state
 	%HostButton.disabled = state
+	for x in %LobbyListContainer.get_children():
+		x.disabled = state
 
 
 # line edit function	
@@ -254,36 +261,59 @@ func get_local_ip():
 	
 # function udp broadcast
 func broadcast_udp():
-	while true:
-		var local_ip = get_local_ip()
-		var message = str(len(GameManager.players)) + '|' + local_ip + '|' + str(port) + '|' + GameManager.players[1].name
-		udp.put_packet(message.to_utf8_buffer())
+	udp_broadcast.set_broadcast_enabled(true)  # Allow broadcasting
+	while true: # TODO Stop broadcasting when ingame
+		for x in range(10):
+			udp_broadcast.set_dest_address(udp_address, udp_port + x)
+			var local_ip = get_local_ip()
+			if GameManager.players.has(1):  # Ensure the host exists
+				var message = str(len(GameManager.players)) + "|" + local_ip + "|" + str(port) + "|" + GameManager.players[1].name
+				udp_broadcast.put_packet(message.to_utf8_buffer())
+				#print("📤 Sent UDP Broadcast:", message)
 		await get_tree().create_timer(1.0).timeout
-
-var udp2 = PacketPeerUDP.new()
-
+		
 func listen_udp():
-	#udp.bind(udp_port,'0.0.0.0')
-	#print("Listening for game lobbies...")
-	if udp2.bind(udp_port) != OK:
-		print("❌ Failed to bind UDP listener on port", udp_port)
-		return
-	print("✅ Listening for UDP packets on port", udp_port)
+	for x in range(10):
+		var error = udp_listener.bind(udp_port + x, "0.0.0.0") 
+		if error != OK:
+			#print("❌ Failed to bind UDP listener on port", udp_port + x, "Error:", error)
+			continue
+		#print("✅ Listening on port", udp_port + x)
+		break
+
 
 func _process(_delta):
-	if udp2.get_available_packet_count() > 0:
-		var packet = udp2.get_packet().get_string_from_utf8()
+	while udp_listener.get_available_packet_count() > 0:
+		var packet = udp_listener.get_packet().get_string_from_utf8()
 		var lobby = udp_packet_to_lobby(packet)
-		if not lobbies.get(lobby.ip):
+	
+		if not lobbies.has(lobby.ip):
 			lobbies[lobby.ip] = lobby
 			add_lobby_ui(lobby)
+		elif lobbies[lobby.ip].players != lobby.players:
+			lobbies[lobby.ip].players = lobby.players
+			lobbies[lobby.ip].timestamp = Time.get_ticks_msec()
+			modify_lobby_ui(lobby)
+		else:
+			lobbies[lobby.ip].timestamp = Time.get_ticks_msec()
+		
+	for x in lobbies:
+		var t = Time.get_ticks_msec()
+		var st = lobbies[x].timestamp
+		if (t - st > 5000):
+			remove_lobby_ui(lobbies[x])
+			lobbies.erase(lobbies[x].ip)
 
 func add_lobby_ui(lobby):
 	var button = Button.new()
 	button.text = lobby.host + ' (' + str(lobby.players) + '/4)'
 	button.name = lobby.ip
+	button.disabled = (%PlayerNameLabel.text == '')
 	%LobbyListContainer.add_child(button)
 	button.button_down.connect(func(): join_lobby(lobby.ip, lobby.port))
+
+func modify_lobby_ui(lobby):
+	%LobbyListContainer.get_node(str(lobby.ip).replace('.','_')).text = lobby.host + ' (' + str(lobby.players) + '/4)'
 
 func join_lobby(ip,port):
 	peer = ENetMultiplayerPeer.new()
@@ -294,7 +324,9 @@ func join_lobby(ip,port):
 	send_to_lobby()
 
 func remove_lobby_ui(lobby):
-	pass
+	var n = %LobbyListContainer.get_node(str(lobby.ip).replace('.','_'))
+	n.get_parent().remove_child(n)
+	n.queue_free()
 
 func udp_packet_to_lobby(packet):
 	
@@ -317,7 +349,7 @@ func udp_packet_to_lobby(packet):
 	return lobby
 		
 func stop_listen_udp():
-	udp.close()
+	udp_listener.close()
 	
 func send_to_lobby():
 	var lobby = preload("res://ui/local_lobby_ui.tscn").instantiate()
