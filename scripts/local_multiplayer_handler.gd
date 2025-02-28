@@ -28,7 +28,6 @@ func peerConnected(id):
 # peer Disconnected (runs on clients/server)	
 func peerDisonnected(id):
 	print('Player has disonnected: ' + str(id))
-	
 	# if players in game then kick them out
 	if GameManager.ingame:
 		GameManager.returnhome()
@@ -44,7 +43,6 @@ func peerDisonnected(id):
 		
 		# only remove the player
 		GameManager.players.erase(id);
-		
 	# change player count	
 	#getPlayerNames()
 	
@@ -59,7 +57,10 @@ func connectedServer():
 
 # disconnected Server (client)
 func disconnectedServer():
+	GameManager.players.clear()
 	listen_udp()
+	changebuttonsstate(true)
+	show()
 	
 # connection Failed (client)
 func connectionFailed():
@@ -146,80 +147,6 @@ func send_playerinfo_toclient(server_players):
 				'score': 0
 		 	}
 	
-	# get the player names for UI
-	#getPlayerNames()
-	
-# function get player names on UI
-#func getPlayerNames():
-	## get container
-	#var players_container = %PlayersPanel.get_child(0)
-	#
-	## loop through text if player has left
-	#for label in players_container.get_children():
-		#if GameManager.players.get(str(label.name)): continue
-		#players_container.remove_child(label)
-		#label.queue_free()
-	#
-	## loop through players
-	#for player_id in GameManager.players:
-		#var player_name = GameManager.players[player_id].name
-		#
-		## check if text is there, skip
-		#var exists = players_container.get_node_or_null(player_name+'_ID')
-		#if exists: continue
-		#
-		## create label
-		#var label = Label.new()
-		#label.name = str(player_id) + '_ID'
-		#label.text = player_name
-		#players_container.add_child(label)
-		
-	# change player count
-	# changePlayerCount()
-
-
-# start button pressed
-#func _on_start_button_button_down() -> void:
-	#
-	## Only have host start
-	#if multiplayer.get_unique_id() != 1:
-		#return
-		#
-	## Check if there are two or more players	
-	#if len(GameManager.players) < 2:
-		#statushandle('Error: Can not start with 1 player')
-		#return
-		#
-	## rpc call to start the game	
-	#startGame.rpc()
-
-# rpc to start game	
-#@rpc("authority", "call_local", "reliable")
-#func startGame():
-	#
-	## load world
-	#var scene = load("res://game/main.tscn").instantiate()
-	#get_tree().root.add_child(scene)
-	#
-	## hide this ui
-	#self.hide()
-	#
-	##print('START')
-	#
-	## set gamemanager variables
-	#GameManager.world = scene
-	#GameManager.mui = self
-	#GameManager.ingame = true
-	#
-	## start game cycle
-	#GameManager.game_cycle()
-	
-# set player count in the UI	
-#func changePlayerCount():
-	#
-	## get len players then set it to the UI
-	#var c = len(GameManager.players)
-	#%PlayerCountLabel.text = 'Player Count (' + str(c) + '/4)'
 	
 # change button states function	
 func changebuttonsstate(state):
@@ -300,7 +227,7 @@ func _process(_delta):
 	for x in lobbies:
 		var t = Time.get_ticks_msec()
 		var st = lobbies[x].timestamp
-		if (t - st > 5000):
+		if (t - st > 1500):
 			remove_lobby_ui(lobbies[x])
 			lobbies.erase(lobbies[x].ip)
 
@@ -316,8 +243,21 @@ func modify_lobby_ui(lobby):
 	%LobbyListContainer.get_node(str(lobby.ip).replace('.','_')).text = lobby.host + ' (' + str(lobby.players) + '/4)'
 
 func join_lobby(ip,port):
+	# Buffer to check if the lobby still exists
+	changebuttonsstate(false)
+	await get_tree().create_timer(1.5).timeout
+	changebuttonsstate(true)
+	if not lobbies.has(ip):
+		print('Error: Lobby is gone')
+		return
+	
 	peer = ENetMultiplayerPeer.new()
-	peer.create_client(ip, int(port))
+	var error = peer.create_client(ip, int(port))
+	
+	if error:
+		print('Error: when trying to join')
+		return
+		
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)	
 	stop_listen_udp()

@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://ddw58cbmr41oc"]
+[gd_scene load_steps=2 format=3 uid="uid://ddw58cbmr41oc"]
+
+[ext_resource type="Script" path="res://scripts/local_multiplayer_lobby.gd" id="1_1fmff"]
 
 [node name="LocalLobbyUI" type="Control"]
 layout_mode = 3
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_1fmff")
 
 [node name="PlayersPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -33,3 +36,29 @@ anchor_bottom = 0.5
 offset_right = 418.0
 offset_bottom = 23.0
 text = "Player Count (0/4)"
+
+[node name="BackButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 16.0
+offset_top = 26.0
+offset_right = 61.0
+offset_bottom = 57.0
+text = "Back"
+
+[node name="StartButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -112.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 47.0
+grow_horizontal = 0
+disabled = true
+text = "Start Game"
+
+[connection signal="button_down" from="BackButton" to="." method="_on_back_button_button_down"]
+[connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]
