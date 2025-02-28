@@ -18,11 +18,35 @@ func getPlayerNames():
 		var exists = players_container.get_node_or_null(player_name+'_ID')
 		if exists: continue
 		
+		# create margin container
+		var m_container = MarginContainer.new()
+		m_container.name = str(player_id) + '_ID'
+		var margin_value = 8
+		m_container.add_theme_constant_override("margin_top", margin_value)
+		m_container.add_theme_constant_override("margin_left", margin_value)
+		m_container.add_theme_constant_override("margin_bottom", margin_value)
+		m_container.add_theme_constant_override("margin_right", margin_value)
+		players_container.add_child(m_container)
+		
+		# create hsplit
+		var h_split = HSplitContainer.new()
+		h_split.dragger_visibility = SplitContainer.DRAGGER_HIDDEN_COLLAPSED
+		m_container.add_child(h_split)
+			
 		# create label
 		var label = Label.new()
-		label.name = str(player_id) + '_ID'
+		label.name = 'PlayerNameLabel'
 		label.text = player_name
-		players_container.add_child(label)
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h_split.add_child(label)
+		
+		if multiplayer.is_server() and player_id != 1:
+			# create kick button
+			var kick = Button.new()
+			kick.name = 'KickButton'
+			kick.text = 'Kick'
+			kick.button_down.connect(func(): kick_player(player_id))
+			h_split.add_child(kick)
 		
 	# change player count
 	changePlayerCount()
@@ -101,3 +125,7 @@ func remove_player():
 	multiplayer.multiplayer_peer.close()
 	get_tree().root.remove_child(self)
 	queue_free()
+	
+func kick_player(id):
+	remove_player.rpc_id(id)
+	print('Kicked ',id)
