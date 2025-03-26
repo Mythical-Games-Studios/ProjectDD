@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://d80oahnp4vhm"]
 
-[ext_resource type="Script" path="res://scripts/local_multiplayer_handler.gd" id="1_bhb53"]
+[ext_resource type="Script" uid="uid://cyid8b7k43uya" path="res://scripts/local_multiplayer_handler.gd" id="1_bhb53"]
 [ext_resource type="LabelSettings" uid="uid://c4hftu5nw3icx" path="res://assets/fonts/ingamefonts.tres" id="2_c2uex"]
-[ext_resource type="Script" path="res://scripts/version_label.gd" id="3_k6kmc"]
+[ext_resource type="Script" uid="uid://mp78wav6tqya" path="res://scripts/version_label.gd" id="3_k6kmc"]
 
 [node name="LocalMultiplayerHandler" type="Control"]
 layout_mode = 3
@@ -87,6 +87,7 @@ grow_vertical = 2
 [node name="VSplitContainer" type="VSplitContainer" parent="LobbiesContainer"]
 layout_mode = 2
 split_offset = 8
+dragger_visibility = 2
 
 [node name="LobbiesLabel" type="Label" parent="LobbiesContainer/VSplitContainer"]
 layout_mode = 2

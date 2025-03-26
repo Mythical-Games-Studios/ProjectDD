@@ -13,7 +13,7 @@ config_version=5
 config/name="Dominos"
 config/version="0.2.0-dev"
 run/main_scene="res://ui/local_multiplayer_handler.tscn"
-config/features=PackedStringArray("4.3", "Mobile")
+config/features=PackedStringArray("4.4", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]

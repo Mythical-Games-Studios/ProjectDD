@@ -2,7 +2,7 @@ extends Control
 
 # export address, peer
 @export var address = "127.0.0.1"
-@export var port = 18042
+@export var port = 16384
 
 var udp_broadcast := PacketPeerUDP.new() # For sending broadcasts
 var udp_listener := PacketPeerUDP.new()  # For listening to broadcasts
@@ -53,12 +53,12 @@ func connectedServer():
 	# Disable UI
 	send_playerinfo_toserver.rpc(%PlayerNameLabel.text,multiplayer.get_unique_id())
 	changebuttonsstate(false)
-	stop_listen_udp()
+	#stop_listen_udp()
 
 # disconnected Server (client)
 func disconnectedServer():
 	GameManager.players.clear()
-	listen_udp()
+	#listen_udp()
 	changebuttonsstate(true)
 	show()
 	
@@ -69,8 +69,7 @@ func connectionFailed():
 	
 # host button pressed	
 func _on_host_button_button_down() -> void:
-	
-	
+		
 	# create new peer
 	peer = ENetMultiplayerPeer.new()
 	var error = peer.create_server(port,4)
@@ -88,12 +87,13 @@ func _on_host_button_button_down() -> void:
 	send_playerinfo_toserver(%PlayerNameLabel.text,1)
 	
 	# prevent UI
-	%PlayerNameLabel.editable = false
+	#%PlayerNameLabel.editable = false
 	#%StartButton.disabled = false
 	
 	# change states
 	#getPlayerNames()
 	print('Host Success! Waiting for players')
+	print(OS.get_environment("COMPUTERNAME"), " is hosting on ", IP.get_local_addresses())
 	changebuttonsstate(false)
 	
 	# udp broadcast
@@ -166,17 +166,17 @@ func _on_line_edit_text_changed(new_text: String) -> void:
 		changebuttonsstate(false)
 
 # animation for status		
-#func animatestatus():
-	#var tween = get_tree().create_tween()
-	#tween.tween_property($StatusLabel, "position", Vector2($StatusLabel.position.x, 50), 0.5)
-	#await get_tree().create_timer(1.0).timeout
-	#tween = get_tree().create_tween()
-	#tween.tween_property($StatusLabel, "position", Vector2($StatusLabel.position.x, -50), 0.5)
+func animatestatus():
+	var tween = get_tree().create_tween()
+	tween.tween_property($StatusLabel, "position", Vector2($StatusLabel.position.x, 50), 0.5)
+	await get_tree().create_timer(1.0).timeout
+	tween = get_tree().create_tween()
+	tween.tween_property($StatusLabel, "position", Vector2($StatusLabel.position.x, -50), 0.5)
 
 # status handle function
-#func statushandle(text):
-	#$StatusLabel.text = text
-	#animatestatus()
+func statushandle(text):
+	$StatusLabel.text = text
+	animatestatus()
 
 
 # get local ip
@@ -186,7 +186,7 @@ func get_local_ip():
 			return address
 	return "127.0.0.1" # Fallback if no local IP is found
 	
-# function udp broadcast
+## function udp broadcast
 func broadcast_udp():
 	udp_broadcast.set_broadcast_enabled(true)  # Allow broadcasting
 	while true: # TODO Stop broadcasting when ingame
@@ -203,14 +203,14 @@ func listen_udp():
 	for x in range(10):
 		var error = udp_listener.bind(udp_port + x, "0.0.0.0") 
 		if error != OK:
-			#print("❌ Failed to bind UDP listener on port", udp_port + x, "Error:", error)
+			print("❌ Failed to bind UDP listener on port", udp_port + x, "Error:", error)
 			continue
-		#print("✅ Listening on port", udp_port + x)
+		print("✅ Listening on port", udp_port + x)
 		break
 
 
 func _process(_delta):
-	while udp_listener.get_available_packet_count() > 0:
+	while udp_listener.is_bound() and udp_listener.get_available_packet_count() > 0:
 		var packet = udp_listener.get_packet().get_string_from_utf8()
 		var lobby = udp_packet_to_lobby(packet)
 	
@@ -243,24 +243,36 @@ func modify_lobby_ui(lobby):
 	%LobbyListContainer.get_node(str(lobby.ip).replace('.','_')).text = lobby.host + ' (' + str(lobby.players) + '/4)'
 
 func join_lobby(ip,port):
-	# Buffer to check if the lobby still exists
+	 #Buffer to check if the lobby still exists
 	changebuttonsstate(false)
 	await get_tree().create_timer(1.5).timeout
 	changebuttonsstate(true)
 	if not lobbies.has(ip):
 		print('Error: Lobby is gone')
 		return
-	
+	stop_listen_udp()
 	peer = ENetMultiplayerPeer.new()
 	var error = peer.create_client(ip, int(port))
 	
 	if error:
 		print('Error: when trying to join')
+		listen_udp()
 		return
 		
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
-	multiplayer.set_multiplayer_peer(peer)	
-	stop_listen_udp()
+	multiplayer.set_multiplayer_peer(peer)
+	
+	while multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTING:
+		print('waiting')
+		await get_tree().create_timer(1).timeout
+	
+	if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		print("Error: Could not establish connection")
+		peer.close()
+		listen_udp()
+		return
+		
+	
 	send_to_lobby()
 
 func remove_lobby_ui(lobby):

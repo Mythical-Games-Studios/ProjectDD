@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://08rr8wrcgf8h"]
 
-[ext_resource type="Script" path="res://scripts/game_test_ui.gd" id="1_vj7j7"]
-[ext_resource type="Script" path="res://scripts/timer_gui.gd" id="2_7q0gf"]
+[ext_resource type="Script" uid="uid://cdc6y3wkkx30o" path="res://scripts/game_test_ui.gd" id="1_vj7j7"]
+[ext_resource type="Script" uid="uid://dm3j16mx0g5q" path="res://scripts/timer_gui.gd" id="2_7q0gf"]
 [ext_resource type="LabelSettings" uid="uid://c4hftu5nw3icx" path="res://assets/fonts/ingamefonts.tres" id="2_u0yxm"]
 
 [node name="GameUI" type="Control"]
