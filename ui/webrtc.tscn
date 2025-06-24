@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://d15yxtho2c7i0"]
+
+[ext_resource type="Script" uid="uid://c2hu3vch06ih4" path="res://scripts/web_rtc_client.gd" id="1_8p4bw"]
+[ext_resource type="Script" uid="uid://bkxsvmxb637td" path="res://scripts/web_rtc_server.gd" id="2_7d5oj"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Client" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_8p4bw")
+
+[node name="LineEdit" type="LineEdit" parent="Client"]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 100.0
+offset_right = 416.0
+offset_bottom = 131.0
+
+[node name="Server" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_7d5oj")
+
+[node name="StartServer" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Start Server"
+
+[node name="StartClient" type="Button" parent="."]
+layout_mode = 1
+offset_right = 100.0
+offset_bottom = 31.0
+text = "Start Client"
+
+[node name="SendTestPacket" type="Button" parent="."]
+layout_mode = 1
+offset_top = 50.0
+offset_right = 139.0
+offset_bottom = 81.0
+text = "Send Test Packet"
+
+[node name="JoinLobby" type="Button" parent="."]
+layout_mode = 1
+offset_top = 100.0
+offset_right = 139.0
+offset_bottom = 131.0
+text = "Join Lobby"
+
+[node name="SendTestPacket2" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -139.0
+offset_top = 50.0
+offset_bottom = 81.0
+grow_horizontal = 0
+text = "Send Test Packet"
+
+[connection signal="button_down" from="StartServer" to="Server" method="_on_start_server_button_down"]
+[connection signal="button_down" from="StartClient" to="Client" method="_on_start_client_button_down"]
+[connection signal="button_down" from="SendTestPacket" to="Client" method="_on_send_test_packet_button_down"]
+[connection signal="button_down" from="JoinLobby" to="Client" method="_on_join_lobby_button_down"]
+[connection signal="button_down" from="SendTestPacket2" to="Server" method="_on_send_test_packet_2_button_down"]
